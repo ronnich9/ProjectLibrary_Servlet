@@ -32,26 +32,25 @@ public class RegistrationCommand implements Command {
 
 
         if (!(Objects.nonNull(username) &&
-                Objects.nonNull(password))) {
+                Objects.nonNull(password) && Objects.nonNull(phone) && Objects.nonNull(email)) ) {
             return "/registration.jsp";
         }
 
         User user = new User(username, password, phone, email, Collections.singleton(Role.USER));
 
-        UserDAO dao = daoFactory.createUserDao();
+//        UserDAO dao = daoFactory.createUserDao();
+//
+//        dao.create(user);
+        log.info("User to be registered: " + user);
 
-        dao.create(user);
 
-//        System.out.println(user.getUsername());
-//        if (userService.registerUser(user)) {
-//            log.info("User successfully registered");
-//            return "redirect:/login";
-//        } else {
-//            log.info("User can not be registered");
-//            request.setAttribute("error", true);
-//            return "/index.jsp";
-//        }
-
-        return "/index.jsp";
+        if (userService.registerUser(user)) {
+            log.info("User successfully registered");
+            return "redirect:/login";
+        } else {
+            log.info("User can not be registered");
+            request.setAttribute("error", true);
+            return "/index.jsp";
+        }
     }
 }

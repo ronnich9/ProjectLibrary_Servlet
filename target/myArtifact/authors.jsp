@@ -22,7 +22,7 @@
 
 <c:if test="${sessionScope.userRoles.contains('ADMIN')}">
     <div class="container mt-5">
-        <button class="btn btn-lg btn-success ml-5 mt-5">Add New Author</button>
+        <a class="btn btn-lg btn-success ml-5 mt-5" href="${pageContext.request.contextPath}/app/create_author">Add New Author</a>
     </div>
 </c:if>
 
@@ -43,7 +43,7 @@
                 <tr>
                     <td><span> ${author.name} </span></td>
                     <c:if test="${sessionScope.userRoles.contains('ADMIN')}">
-                        <td><button class="btn btn-primary">Delete</button></td>
+                        <td><a class="btn btn-primary" href="${pageContext.request.contextPath}/app/delete_author?id=${author.id}">Delete</a></td>
                     </c:if>
 
                 </tr>
@@ -53,30 +53,6 @@
     </div>
 </div>
 
-
-<%--<div th:switch="${authors}" class="container mt-5">--%>
-<%--    <div class="card">--%>
-<%--        <table class="table table-striped">--%>
-<%--            <thead>--%>
-<%--            <tr>--%>
-<%--                <th> Author</th>--%>
-<%--                <c:if test="${sessionScope.userRoles.contains('ADMIN')}">--%>
-<%--                    <th> Delete</th>--%>
-<%--                </c:if>--%>
-<%--            </tr>--%>
-<%--            </thead>--%>
-<%--            <tbody>--%>
-<%--            <tr th:each="author : ${authors}">--%>
-<%--                <td><span th:text="${author.name}"> Title </span></td>--%>
-<%--                <c:if test="${sessionScope.userRoles.contains('ADMIN')}">--%>
-<%--                    <td><a class="btn btn-primary">Delete</a></td>--%>
-<%--                </c:if>--%>
-
-<%--            </tr>--%>
-<%--            </tbody>--%>
-<%--        </table>--%>
-<%--    </div>--%>
-<%--</div>--%>
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
 </body>

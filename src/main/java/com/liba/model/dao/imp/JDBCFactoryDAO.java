@@ -1,9 +1,6 @@
 package com.liba.model.dao.imp;
 
-import com.liba.model.dao.AuthorDAO;
-import com.liba.model.dao.BookDAO;
-import com.liba.model.dao.FactoryDAO;
-import com.liba.model.dao.UserDAO;
+import com.liba.model.dao.*;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -26,6 +23,11 @@ public class JDBCFactoryDAO extends FactoryDAO {
     @Override
     public BookDAO createBookDao() {
         return new JDBCBookDAO(getConnection());
+    }
+
+    @Override
+    public TakenBookDAO createTakenBookDao() {
+        return new JDBCTakenBookDAO(getConnection());
     }
 
 

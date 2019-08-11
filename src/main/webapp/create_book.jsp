@@ -92,7 +92,7 @@
 
                 <div class="row">
                     <div class="col-md-6 mt-5">
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-primary">Create</button>
                         <a class="btn btn-info" href="#" th:href="@{/books}"> Back to All Books </a>
                     </div>
                 </div>

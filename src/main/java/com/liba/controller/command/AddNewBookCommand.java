@@ -21,9 +21,10 @@ public class AddNewBookCommand implements Command {
     @Override
     public String execute(HttpServletRequest request) {
         String title = request.getParameter("title");
-        Author author = new Author();
+        //Author author = new Author();
         //author.setName(request.getParameter("author"));
-        author.setId(Long.valueOf(request.getParameter("author")));
+        //author.setId(Long.valueOf(request.getParameter("author")));
+        String author_id = request.getParameter("author");
         String pages = request.getParameter("pages");
         String year = request.getParameter("year");
         String img = request.getParameter("imgUrl");
@@ -37,14 +38,14 @@ public class AddNewBookCommand implements Command {
 
         Book book = new Book();
         book.setTitle(title);
-        book.setAuthor(author);
+        //book.setAuthor(author);
         book.setPages(Integer.valueOf(pages));
         book.setYear(Integer.valueOf(year));
         book.setImgUrl(img);
         book.setAmount(Integer.valueOf(amount));
 
 
-        bookService.createBook(book);
-        return "redirect:/activities";
+        bookService.createBook(book, Long.valueOf(author_id));
+        return "redirect:/books";
     }
 }

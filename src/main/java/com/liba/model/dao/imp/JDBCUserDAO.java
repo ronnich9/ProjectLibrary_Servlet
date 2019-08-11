@@ -1,10 +1,17 @@
 package com.liba.model.dao.imp;
 
+import com.liba.model.dao.mapper.BookMapper;
+import com.liba.model.dao.mapper.TakenBookMapper;
+import com.liba.model.dao.mapper.UserMapper;
+import com.liba.model.entity.Book;
 import com.liba.model.entity.Role;
 import com.liba.model.dao.UserDAO;
+import com.liba.model.entity.TakenBook;
 import com.liba.model.entity.User;
 
 import java.sql.*;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -24,7 +31,6 @@ public class JDBCUserDAO implements UserDAO {
     public void create(User entity) {
         try (PreparedStatement ps =
                      connection.prepareStatement(INSERT_USER)) {
-
 
             ps.setString(1, entity.getUsername());
             ps.setString(2, entity.getPassword());
@@ -64,8 +70,8 @@ public class JDBCUserDAO implements UserDAO {
     }
 
     @Override
-    public Optional<User> findById(Long id) {
-        return Optional.empty();
+    public User findById(Long id) {
+        return null;
     }
 
     @Override
@@ -76,4 +82,21 @@ public class JDBCUserDAO implements UserDAO {
             throw new RuntimeException(e);
         }
     }
+
+    @Override
+    public User findByUsername(String username) {
+        UserMapper userMapper = new UserMapper();
+        Map<Long, User> users = new HashMap<>();
+        try (PreparedStatement ps =
+                     connection.prepareStatement("select * from users u left join user_role ur on u.id = ur.user_id where username =?")) {
+            ps.setString(1, username);
+            ResultSet rs = ps.executeQuery();
+            return userMapper.extractFromRsWithALLRoles(rs);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
 }

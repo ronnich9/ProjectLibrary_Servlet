@@ -12,7 +12,8 @@ import java.util.*;
 
 public class AuthFilter implements Filter {
 
-    private final List<String> adminPaths = Arrays.asList("/index", "/logout", "/books", "/authors", "/create_book");
+    private final List<String> adminPaths = Arrays.asList("/index", "/logout", "/books", "/authors", "/create_book",
+            "/create_author", "/delete_author", "/delete_book", "/taken_books");
     private final List<String> userPaths = Arrays.asList("/index", "/books", "/authors", "/logout");
     private final List<String> defaultPaths = Arrays.asList("/index", "/login", "/registration", "/authors", "/books", "/create_book");
     private Map<Role, List<String>> allowedPathPatterns = new HashMap<>();

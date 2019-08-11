@@ -45,8 +45,21 @@ public class JDBCAuthorDAO implements AuthorDAO {
     }
 
     @Override
-    public Optional<Author> findById(Long id) {
-        return Optional.empty();
+    public Author findById(Long id) {
+        AuthorMapper authorMapper = new AuthorMapper();
+
+        try (PreparedStatement ps =
+                     connection.prepareStatement("select * from authors where id =?")) {
+            ps.setLong(1, id);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                return authorMapper.extractFromResultSet(rs);
+            }
+            else return null;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
@@ -70,6 +83,16 @@ public class JDBCAuthorDAO implements AuthorDAO {
             return null;
         }
 
+    }
+
+    @Override
+    public void delete(Long authorId) {
+        try (PreparedStatement ps = connection.prepareStatement("delete from authors where id = ?")) {
+            ps.setLong(1, authorId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

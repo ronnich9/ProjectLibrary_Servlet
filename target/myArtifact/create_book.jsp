@@ -44,12 +44,6 @@
                         </c:forEach>
                     </select>
 
-
-                    <%--                    <form:select class="custom-select" id="author" name="author">--%>
-                    <%--                        <c:forEach items="${authors}" var="author">--%>
-                    <%--                            <option>${author.name}</option>--%>
-                    <%--                        </c:forEach>--%>
-                    <%--                    </form:select>--%>
                     <div class="input-group-append">
                         <a class="ml-1" href="/authors/create">
                             Add new author
@@ -98,7 +92,7 @@
 
                 <div class="row">
                     <div class="col-md-6 mt-5">
-                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button type="submit" class="btn btn-primary">Create</button>
                         <a class="btn btn-info" href="#" th:href="@{/books}"> Back to All Books </a>
                     </div>
                 </div>

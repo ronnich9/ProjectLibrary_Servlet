@@ -2,6 +2,7 @@ package com.liba.controller.command;
 
 import com.liba.model.sevice.AuthorService;
 import com.liba.model.sevice.BookService;
+import com.liba.model.sevice.TakenBookService;
 import com.liba.model.sevice.UserService;
 
 import java.util.HashMap;
@@ -21,6 +22,10 @@ public class CommandManager {
         commandMap.put("/authors", new AuthorCommand(new AuthorService()));
         commandMap.put("/books", new BookCommand(new BookService()));
         commandMap.put("/create_book", new AddNewBookCommand(new AuthorService(), new BookService()));
+        commandMap.put("/create_author", new AddNewAuthorCommand(new AuthorService()));
+        commandMap.put("/delete_author", new DeleteAuthorCommand(new AuthorService()));
+        commandMap.put("/delete_book", new DeleteBookCommand(new BookService()));
+        commandMap.put("/taken_books", new TakenBooksCommand(new TakenBookService()));
     }
 
     public static CommandManager getInstance() {

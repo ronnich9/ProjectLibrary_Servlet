@@ -44,7 +44,7 @@
                         Administration
                     </a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                        <a class="dropdown-item" href="/admin/all">All taken books</a>
+                        <a class="dropdown-item" href="/app/taken_books">All taken books</a>
                         <a class="dropdown-item" href="/admin/books">Sort by Book</a>
                         <a class="dropdown-item" href="/admin/users">Sort by User</a>
                     </div>

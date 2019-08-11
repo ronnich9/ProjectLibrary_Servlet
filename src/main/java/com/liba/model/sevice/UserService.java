@@ -22,21 +22,15 @@ public class UserService {
         }
     }
 
-    public boolean registerUser(User user){
+    public boolean registerUser(User user) {
 
         try (UserDAO dao = daoFactory.createUserDao()) {
-            User userFromDb = dao.findByUsername(user.getUsername());
-            if (userFromDb != null) {
-                log.warn("login not unique!");
-                return false;
-            }
+            log.warn("login not unique!");
             System.out.println(user.getUsername());
             dao.create(user);
-
             return true;
         } catch (Exception e) {
-            log.warn(e.getMessage());
-            e.getStackTrace();
+            log.warn("Can not register user: " + user);
             return false;
         }
     }

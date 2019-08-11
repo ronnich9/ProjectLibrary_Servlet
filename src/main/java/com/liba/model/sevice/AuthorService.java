@@ -37,4 +37,12 @@ public class AuthorService {
             return false;
         }
     }
+
+    public void deleteAuthor(Long authorId) {
+        try (AuthorDAO authorDAO = daoFactory.createAuthorDao()) {
+            authorDAO.delete(authorId);
+        } catch (Exception e) {
+            log.warn("Can not delete author", e);
+        }
+    }
 }

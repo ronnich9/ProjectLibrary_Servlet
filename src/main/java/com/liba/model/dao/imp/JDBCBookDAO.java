@@ -13,7 +13,7 @@ public class JDBCBookDAO implements BookDAO {
 
     private Connection connection;
 
-    public JDBCBookDAO(Connection connection) {
+    JDBCBookDAO(Connection connection) {
         this.connection = connection;
     }
 
@@ -39,7 +39,6 @@ public class JDBCBookDAO implements BookDAO {
         final String query = "select * from books left join authors on books.author_id = authors.id";
         try (Statement st = connection.createStatement()) {
             ResultSet rs = st.executeQuery(query);
-            BookMapper bookMapper = new BookMapper();
 
             Map<Long, Book> books = extractMappedBooks(rs);
 
@@ -47,6 +46,16 @@ public class JDBCBookDAO implements BookDAO {
         } catch (SQLException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    @Override
+    public void delete(Long bookId) {
+        try (PreparedStatement ps = connection.prepareStatement("delete from books where id = ?")) {
+            ps.setLong(1, bookId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -93,8 +102,8 @@ public class JDBCBookDAO implements BookDAO {
 
 
     @Override
-    public Optional<Book> findById(Long id) {
-        return Optional.empty();
+    public Book findById(Long id) {
+        return null;
     }
 
     @Override

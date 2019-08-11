@@ -1,7 +1,9 @@
 package com.liba.model.sevice;
 
+import com.liba.model.dao.AuthorDAO;
 import com.liba.model.dao.BookDAO;
 import com.liba.model.dao.FactoryDAO;
+import com.liba.model.entity.Author;
 import com.liba.model.entity.Book;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -21,13 +23,27 @@ public class BookService {
         }
     }
 
-    public void createBook(Book book) {
-        try (BookDAO dao = daoFactory.createBookDao()) {
-            dao.create(book);
+    public void createBook(Book book, Long authorId) {
+        try (BookDAO bookDAO = daoFactory.createBookDao();
+             AuthorDAO authorDAO = daoFactory.createAuthorDao()) {
+//            Author author = authorDAO.findById(authorId).orElseThrow(() ->
+//                    new IllegalArgumentException("Invalid author id: " + authorId));
+            Author author = authorDAO.findById(authorId);
+            book.setAuthor(author);
+
+            bookDAO.create(book);
         } catch (Exception e) {
-            log.warn("I Cant!");
+            log.warn("Cannot create a book!");
             e.printStackTrace();
         }
 
+    }
+
+    public void deleteBook(Long bookId) {
+        try (BookDAO bookDAO = daoFactory.createBookDao()) {
+            bookDAO.delete(bookId);
+        } catch (Exception e) {
+            log.warn("Can not delete book", e);
+        }
     }
 }
