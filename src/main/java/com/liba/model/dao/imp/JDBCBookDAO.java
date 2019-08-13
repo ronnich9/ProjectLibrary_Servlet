@@ -3,8 +3,12 @@ package com.liba.model.dao.imp;
 import com.liba.model.dao.BookDAO;
 import com.liba.model.dao.mapper.AuthorMapper;
 import com.liba.model.dao.mapper.BookMapper;
+import com.liba.model.dao.mapper.TakenBookMapper;
+import com.liba.model.dao.mapper.UserMapper;
 import com.liba.model.entity.Author;
 import com.liba.model.entity.Book;
+import com.liba.model.entity.TakenBook;
+import com.liba.model.entity.User;
 
 import java.sql.*;
 import java.util.*;
@@ -18,16 +22,14 @@ public class JDBCBookDAO implements BookDAO {
     }
 
     @Override
-    public Book findByTitle(String title) {
-        BookMapper bookMapper = new BookMapper();
-        try (PreparedStatement ps =
-                     connection.prepareStatement("select * from books where title =?")) {
-            ps.setString(1, title);
+    public List<Book> findByTitle(String searchValue) {
+
+        try (PreparedStatement ps = connection.prepareStatement("select * from books left join authors on books.author_id = authors.id where books.title like ? ")) {
+            ps.setString(1, "%" + searchValue + "%" );
             ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return bookMapper.extractFromResultSet(rs);
-            }
-            else return null;
+            Map<Long, Book> books = extractMappedBooks(rs);
+
+            return new ArrayList<>(books.values());
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
@@ -41,6 +43,7 @@ public class JDBCBookDAO implements BookDAO {
             ResultSet rs = st.executeQuery(query);
 
             Map<Long, Book> books = extractMappedBooks(rs);
+
 
             return new ArrayList<>(books.values());
         } catch (SQLException e) {
@@ -102,12 +105,50 @@ public class JDBCBookDAO implements BookDAO {
 
 
     @Override
-    public Book findById(Long id) {
-        return null;
+    public Optional<Book> findById(Long bookId) {
+
+        try (PreparedStatement ps = connection.prepareStatement("select * from books left join taken_books on books.id = taken_books.book_id where books.id = ?")) {
+            ps.setLong(1, bookId);
+            ResultSet rs = ps.executeQuery();
+
+
+            Map<Long, Book> book = extractMappedTakenBooks(rs);
+            return book.values().stream().findAny();
+        } catch (SQLException e) {
+            throw new RuntimeException("No book id", e);
+        }
+    }
+
+    private Map<Long, Book> extractMappedTakenBooks(ResultSet rs) throws SQLException{
+
+        Map<Long, Book> bookMap = new LinkedHashMap<>();
+        Map<Long, TakenBook> takenBookMap = new HashMap<>();
+
+        TakenBookMapper takenBookMapper = new TakenBookMapper();
+        BookMapper bookMapper = new BookMapper();
+
+
+        while (rs.next()) {
+
+            TakenBook takenBook = takenBookMapper.extractFromResultSet(rs);
+            Book book = bookMapper.extractFromResultSet(rs);
+
+            book = bookMapper.makeUnique(bookMap, book, rs);
+            takenBook = takenBookMapper.makeUnique(takenBookMap, takenBook, rs);
+
+            takenBook.setBook(book);
+            book.getTakenBooks().add(takenBook);
+
+        }
+        return bookMap;
     }
 
     @Override
     public void close() {
-
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }

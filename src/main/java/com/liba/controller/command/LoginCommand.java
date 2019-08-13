@@ -2,6 +2,8 @@ package com.liba.controller.command;
 
 import com.liba.model.entity.User;
 import com.liba.model.sevice.UserService;
+import com.liba.utils.CommandUtils;
+import com.liba.utils.SessionUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -24,12 +26,20 @@ public class LoginCommand implements Command {
             return "/login.jsp";
         }
 
+        if(SessionUtils.checkUserIsLogged(request, username)){
+            request.setAttribute("errorMessage", true);
+            return "/login.jsp";
+        }
+
         User user = userService.getUserByUsername(username);
+
+
         if (user==null) {
             request.setAttribute("message", true);
             return "/login.jsp";
         }
 
+        CommandUtils.storeLoginedUser(request.getSession(), user);
 
 
         if (user.getPassword().equals(password)) {
@@ -44,5 +54,7 @@ public class LoginCommand implements Command {
             request.setAttribute("message", true);
             return "/login.jsp";
         }
+
+
     }
 }

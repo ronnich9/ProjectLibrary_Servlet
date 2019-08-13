@@ -8,10 +8,7 @@ import com.liba.model.dao.mapper.UserMapper;
 import com.liba.model.entity.*;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class JDBCTakenBookDAO implements TakenBookDAO {
 
@@ -41,18 +38,30 @@ public class JDBCTakenBookDAO implements TakenBookDAO {
 
 
     @Override
-    public void create(TakenBook entity) {
-
+    public void create(TakenBook takenBook) {
+        try (PreparedStatement ps = connection.prepareStatement("insert into taken_books(returned_time, taken_time, book_id, user_id) values (?, ?, ?, ?)")) {
+            ps.setTimestamp(1, Timestamp.valueOf(takenBook.getReturned_time()));
+            ps.setTimestamp(2, Timestamp.valueOf(takenBook.getTaken_time()));
+            ps.setLong(3, takenBook.getBook().getId());
+            ps.setLong(4, takenBook.getUser().getId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override
-    public TakenBook findById(Long id) {
-        return null;
+    public Optional<TakenBook> findById(Long id) {
+        return Optional.empty();
     }
 
     @Override
     public void close() {
-
+        try {
+            connection.close();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private Map<Long, TakenBook> extractMappedTakenBooks(ResultSet rs) throws SQLException {
@@ -72,7 +81,6 @@ public class JDBCTakenBookDAO implements TakenBookDAO {
             User user = userMapper.extractFromResultSet(rs);
             Author author = authorMapper.extractFromResultSet(rs);
             Role role = Role.valueOf(rs.getString("user_role.role"));
-            System.out.println("MYROLE " + role);
 
             user = userMapper.makeUnique(userMap, user, rs);
             book = bookMapper.makeUnique(bookMap, book, rs);

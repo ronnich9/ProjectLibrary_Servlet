@@ -10,10 +10,7 @@ import com.liba.model.entity.TakenBook;
 import com.liba.model.entity.User;
 
 import java.sql.*;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 
 public class JDBCUserDAO implements UserDAO {
 
@@ -70,8 +67,41 @@ public class JDBCUserDAO implements UserDAO {
     }
 
     @Override
-    public User findById(Long id) {
-        return null;
+    public Optional<User> findById(Long userId) {
+
+        try (PreparedStatement ps = connection.prepareStatement("select * from users left join user_role on users.id = user_role.user_id " +
+                "left join taken_books on users.id = taken_books.user_id " +
+                "where users.id = ?")) {
+            ps.setLong(1, userId);
+            ResultSet rs = ps.executeQuery();
+
+            Map<Long,User> user = extractMappedUser(rs);
+            return user.values().stream().findAny();
+        } catch (SQLException e) {
+            throw new RuntimeException("Cant find id user", e);
+        }
+    }
+
+    private Map<Long, User> extractMappedUser(ResultSet rs) throws SQLException{
+
+        Map<Long, User> userMap = new LinkedHashMap<>();
+        Map<Long, TakenBook> takenBookMap = new HashMap<>();
+
+        UserMapper userMapper = new UserMapper();
+        TakenBookMapper takenBookMapper = new TakenBookMapper();
+
+        while (rs.next()) {
+            User user = userMapper.extractFromResultSet(rs);
+            TakenBook takenBook = takenBookMapper.extractFromResultSet(rs);
+
+            user = userMapper.makeUnique(userMap, user, rs);
+            takenBook = takenBookMapper.makeUnique(takenBookMap, takenBook, rs);
+
+            takenBook.setUser(user);
+            user.getTakenBooks().add(takenBook);
+
+        }
+        return userMap;
     }
 
     @Override

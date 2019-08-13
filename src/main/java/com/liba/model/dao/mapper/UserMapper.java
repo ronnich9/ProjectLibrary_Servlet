@@ -1,20 +1,21 @@
 package com.liba.model.dao.mapper;
 
 import com.liba.model.entity.Role;
+import com.liba.model.entity.TakenBook;
 import com.liba.model.entity.User;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public class UserMapper implements ObjectMapper<User> {
     @Override
     public User extractFromResultSet(ResultSet rs) throws SQLException {
         User user = new User();
         Set<Role> roles = new HashSet<>();
+        List<TakenBook> takenBooks = new ArrayList<>();
 
+        user.setTakenBooks(takenBooks);
         user.setId(rs.getLong("id"));
         user.setUsername(rs.getString("username"));
         user.setPhone(rs.getString("phone"));
@@ -41,6 +42,7 @@ public class UserMapper implements ObjectMapper<User> {
         user.getRole().add(Role.valueOf(rs.getString("role")));
     }
 
+
     public User extractFromRsWithALLRoles(ResultSet rs) throws SQLException{
         if (rs.next()) {
             User user = extractFromResultSet(rs);
@@ -51,5 +53,6 @@ public class UserMapper implements ObjectMapper<User> {
         }
         return null;
     }
+
 
 }

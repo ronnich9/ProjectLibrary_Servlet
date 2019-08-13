@@ -22,7 +22,8 @@
 
 <c:if test="${sessionScope.userRoles.contains('ADMIN')}">
     <div class="container mt-5">
-        <a class="btn btn-lg btn-success ml-5" href="${pageContext.request.contextPath}/app/create_book">Add New Book</a>
+        <a class="btn btn-lg btn-success ml-5" href="${pageContext.request.contextPath}/app/create_book">Add New
+            Book</a>
     </div>
 </c:if>
 
@@ -40,63 +41,68 @@
 
                 <tbody>
                 <c:forEach var="book" items="${requestScope.books}">
-                <tr style="border-bottom: 1px solid black">
-                    <td width="5%" class="h3" style="padding-left: 15px;"></td>
+                    <tr style="border-bottom: 1px solid black">
+                        <td width="5%" class="h3" style="padding-left: 15px;"></td>
 
-                    <td width="10%">
-                        <img src="${book.imgUrl}" alt="Book Cover Photo" width="100%"/>
-                        <div alt="Book Cover Photo" width="100%"></div>
-                        <div class="row justify-content-center">
-                        </div>
-                    </td>
-                    <td width="100%" style="padding-left: 35px; padding-top: 15px;">
-                        <h5 id="book-title">${book.title}</h5>
+                        <td width="10%">
+                            <img src="${book.imgUrl}" alt="Book Cover Photo" width="100%"/>
+                            <div alt="Book Cover Photo" width="100%"></div>
+                            <div class="row justify-content-center">
+                            </div>
+                        </td>
+                        <td width="100%" style="padding-left: 35px; padding-top: 15px;">
+                            <h5 id="book-title">${book.title}</h5>
 
-                        <span> by </span>
-                        <span>${book.author.name}</span>
-                        <br>
-                        <div style="padding-top: 15px;">
-                            <span> Pages: </span>
-                            <span>${book.pages}</span>
-                            <span class="h6"> | </span>
-                            <span> Year: </span>
-                            <span>${book.year}</span>
-                        </div>
-                        <br>
+                            <span> by </span>
+                            <span>${book.author.name}</span>
+                            <br>
+                            <div style="padding-top: 15px;">
+                                <span> Pages: </span>
+                                <span>${book.pages}</span>
+                                <span class="h6"> | </span>
+                                <span> Year: </span>
+                                <span>${book.year}</span>
+                            </div>
+                            <br>
 
-                        <c:if test="${sessionScope.userRoles.contains('USER')}">
-                            <div>
-                                <form th:action="@{/books/take/{id} (id=${book.id})}" method="post">
-                                    <button type="submit" class="btn btn-success ml-4 mb-3">
-                                        Take
+                            <c:if test="${sessionScope.userRoles.contains('USER')||sessionScope.userRoles.contains('ADMIN')}">
+                                <div>
+                                        <%--                                <form action="${pageContext.request.contextPath}/app/create_book" method="post">--%>
+                                        <%--                                    <a type="submit" class="btn btn-success ml-4 mb-3">--%>
+                                        <%--                                        Take--%>
+                                        <%--                                    </a>--%>
+                                        <%--                                </form>--%>
+                                    <a class="btn btn-success ml-4 mb-3"
+                                       href="${pageContext.request.contextPath}/app/take_book?id=${book.id}"
+                                       style="width: 100px"> Take</a>
+                                </div>
+                            </c:if>
+                        </td>
+
+
+                        <td class="row justify-content-center" style="padding-top: 25px">
+
+                            <c:if test="${sessionScope.userRoles.contains('ADMIN')}">
+                                <div>
+
+                                    <button th:href="@{/books/edit/{id}(id=${book.id})}" class="btn btn-danger mr-3"
+                                            style="width: 100px"> Update
                                     </button>
-                                </form>
-                            </div>
-                        </c:if>
-                    </td>
+
+                                    <br>
+
+                                    <a class="btn btn-danger mt-3"
+                                       href="${pageContext.request.contextPath}/app/delete_book?id=${book.id}"
+                                       style="width: 100px"> Delete</a>
+
+                                </div>
+                            </c:if>
+                            <hr style="width: 250px; visibility: hidden"/>
+
+                        </td>
 
 
-                    <td class="row justify-content-center" style="padding-top: 25px">
-
-                        <c:if test="${sessionScope.userRoles.contains('ADMIN')}">
-                            <div>
-
-                                <button th:href="@{/books/edit/{id}(id=${book.id})}" class="btn btn-danger mr-3"
-                                   style="width: 100px"> Update</button>
-
-                                <br>
-
-                                <a  class="btn btn-danger mt-3" href="${pageContext.request.contextPath}/app/delete_book?id=${book.id}"
-                                   style="width: 100px"> Delete</a>
-
-                            </div>
-                        </c:if>
-                        <hr style="width: 250px; visibility: hidden"/>
-
-                    </td>
-
-
-                </tr>
+                    </tr>
                 </c:forEach>
 
 

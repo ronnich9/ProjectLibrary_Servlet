@@ -32,4 +32,10 @@
     <url-pattern>/app/*</url-pattern>
   </filter-mapping>
 
+  <listener>
+    <listener-class>
+      com.liba.controller.listener.SessionListener
+    </listener-class>
+  </listener>
+
 </web-app>

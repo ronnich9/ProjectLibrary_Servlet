@@ -2,9 +2,12 @@ package com.liba.model.dao.mapper;
 
 import com.liba.model.entity.Author;
 import com.liba.model.entity.Book;
+import com.liba.model.entity.TakenBook;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 public class BookMapper implements ObjectMapper<Book> {
@@ -12,7 +15,9 @@ public class BookMapper implements ObjectMapper<Book> {
     public Book extractFromResultSet(ResultSet rs) throws SQLException {
         Book book = new Book();
         Author author = new Author();
+        List<TakenBook> takenBooks = new ArrayList<>();
 
+        book.setTakenBooks(takenBooks);
         book.setId(rs.getLong("id"));
         book.setTitle(rs.getString("title"));
         author.setId(rs.getLong("author_id"));

@@ -26,9 +26,8 @@ public class BookService {
     public void createBook(Book book, Long authorId) {
         try (BookDAO bookDAO = daoFactory.createBookDao();
              AuthorDAO authorDAO = daoFactory.createAuthorDao()) {
-//            Author author = authorDAO.findById(authorId).orElseThrow(() ->
-//                    new IllegalArgumentException("Invalid author id: " + authorId));
-            Author author = authorDAO.findById(authorId);
+            Author author = authorDAO.findById(authorId).orElseThrow(() ->
+                    new IllegalArgumentException("Invalid author id: " + authorId));
             book.setAuthor(author);
 
             bookDAO.create(book);
@@ -44,6 +43,14 @@ public class BookService {
             bookDAO.delete(bookId);
         } catch (Exception e) {
             log.warn("Can not delete book", e);
+        }
+    }
+
+    public List<Book> findByTitle(String title) {
+        try (BookDAO dao = daoFactory.createBookDao()) {
+            return dao.findByTitle(title);
+        } catch (Exception e) {
+            return Collections.emptyList();
         }
     }
 }

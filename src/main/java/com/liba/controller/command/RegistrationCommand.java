@@ -38,9 +38,6 @@ public class RegistrationCommand implements Command {
 
         User user = new User(username, password, phone, email, Collections.singleton(Role.USER));
 
-//        UserDAO dao = daoFactory.createUserDao();
-//
-//        dao.create(user);
         log.info("User to be registered: " + user);
 
 

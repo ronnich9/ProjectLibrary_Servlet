@@ -1,5 +1,6 @@
 package com.liba.model.entity;
 
+import java.util.List;
 import java.util.Set;
 
 public class User {
@@ -12,7 +13,7 @@ public class User {
     private String phone;
     private String email;
     private Set<Role> role;
-
+    private List<TakenBook> takenBooks;
 
     public User() {
     }
@@ -25,13 +26,14 @@ public class User {
         this.role = role;
     }
 
-    public User(Long id, String username, String password, String phone, String email, Set<Role> role) {
+    public User(Long id, String username, String password, String phone, String email, Set<Role> role, List<TakenBook> takenBooks) {
         this.id = id;
         this.username = username;
         this.password = password;
         this.phone = phone;
         this.email = email;
         this.role = role;
+        this.takenBooks = takenBooks;
     }
 
     public Long getId() {
@@ -80,6 +82,14 @@ public class User {
 
     public void setRole(Set<Role> role) {
         this.role = role;
+    }
+
+    public List<TakenBook> getTakenBooks() {
+        return takenBooks;
+    }
+
+    public void setTakenBooks(List<TakenBook> takenBooks) {
+        this.takenBooks = takenBooks;
     }
 
 }

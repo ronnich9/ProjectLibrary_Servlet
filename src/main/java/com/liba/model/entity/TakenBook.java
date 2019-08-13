@@ -21,6 +21,13 @@ public class TakenBook {
         this.returned_time = returned_time;
     }
 
+    public TakenBook(User user, Book book, LocalDateTime taken_time, LocalDateTime returned_time) {
+        this.user = user;
+        this.book = book;
+        this.taken_time = taken_time;
+        this.returned_time = returned_time;
+    }
+
     public Long getId() {
         return id;
     }
