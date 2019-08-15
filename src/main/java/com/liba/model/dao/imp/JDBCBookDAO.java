@@ -140,6 +140,7 @@ public class JDBCBookDAO implements BookDAO {
             book.getTakenBooks().add(takenBook);
 
         }
+
         return bookMap;
     }
 

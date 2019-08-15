@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface TakenBookDAO extends GenericDAO<TakenBook> {
     List<TakenBook> findAll();
+    List<TakenBook> getBooksByUserId(Long userId);
 }

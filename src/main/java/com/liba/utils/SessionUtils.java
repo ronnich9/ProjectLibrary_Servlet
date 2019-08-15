@@ -1,9 +1,7 @@
 package com.liba.utils;
 
-import com.liba.model.entity.User;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import java.util.HashSet;
 
 public class SessionUtils {

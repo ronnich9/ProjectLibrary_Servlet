@@ -13,9 +13,9 @@ import java.util.*;
 public class AuthFilter implements Filter {
 
     private final List<String> adminPaths = Arrays.asList("/index", "/logout", "/books", "/authors", "/create_book",
-            "/create_author", "/delete_author", "/delete_book", "/taken_books", "/take_book");
-    private final List<String> userPaths = Arrays.asList("/index", "/books", "/authors", "/logout", "/take_book");
-    private final List<String> defaultPaths = Arrays.asList("/index", "/login", "/registration", "/authors", "/books", "/create_book", "/take_book");
+            "/create_author", "/delete_author", "/delete_book", "/taken_books", "/take_book", "/profile");
+    private final List<String> userPaths = Arrays.asList("/index", "/books", "/authors", "/logout", "/taken_books", "/take_book", "/profile");
+    private final List<String> defaultPaths = Arrays.asList("/index", "/login", "/registration", "/authors", "/books");
     private Map<Role, List<String>> allowedPathPatterns = new HashMap<>();
 
 
@@ -61,7 +61,7 @@ public class AuthFilter implements Filter {
         }
         if (!contains) {
             response.setStatus(403);
-            response.sendRedirect("/forbidden.jsp");
+            response.sendRedirect("/error.jsp");
         }
     }
 

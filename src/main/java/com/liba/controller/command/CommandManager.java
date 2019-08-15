@@ -27,6 +27,7 @@ public class CommandManager {
         commandMap.put("/delete_book", new DeleteBookCommand(new BookService()));
         commandMap.put("/taken_books", new TakenBooksCommand(new TakenBookService()));
         commandMap.put("/take_book", new TakeBookCommand(new TakenBookService()));
+        commandMap.put("/profile", new ProfileCommand(new TakenBookService()));
 
     }
 

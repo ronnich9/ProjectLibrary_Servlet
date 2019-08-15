@@ -17,9 +17,8 @@ public class IndexCommand implements Command{
     public String execute(HttpServletRequest request) {
         String searchValue = request.getParameter("searchValue");
 
-        if (!ObjectUtils.allNotNull(searchValue)) {
-            request.setAttribute("books", bookService.findByTitle(searchValue));
-        }
+
+        request.setAttribute("books", bookService.findByTitle(searchValue));
 
         return "/index.jsp";
     }

@@ -21,11 +21,13 @@ public class JDBCTakenBookDAO implements TakenBookDAO {
     @Override
     public List<TakenBook> findAll() {
         try (Statement st = connection.createStatement()) {
-            ResultSet rs = st.executeQuery("select * from taken_books left join users on taken_books.user_id = users.id " +
-                    "left join books on taken_books.book_id = books.id left join user_role on users.id = user_role.user_id " +
+            ResultSet rs = st.executeQuery("select * from taken_books " +
+                    "left join books on taken_books.book_id = books.id " +
                     "left join authors on books.author_id = authors.id");
 
+
             Map<Long, TakenBook> takenBookMap = extractMappedTakenBooks(rs);
+
             return new ArrayList<>(takenBookMap.values());
         } catch (SQLException e) {
             e.printStackTrace();
@@ -33,8 +35,21 @@ public class JDBCTakenBookDAO implements TakenBookDAO {
         }
     }
 
+    @Override
+    public List<TakenBook> getBooksByUserId(Long userId) {
+        try (PreparedStatement ps = connection.prepareStatement("select * from taken_books left join books on taken_books.book_id = books.id " +
+                "left join authors on books.author_id = authors.id where user_id = ?")) {
+            ps.setLong(1, userId);
+            ResultSet rs = ps.executeQuery();
 
+            Map<Long, TakenBook> takenBookMap = extractMappedTakenBooks(rs);
 
+            return new ArrayList<>(takenBookMap.values());
+        } catch (SQLException e) {
+            e.printStackTrace();
+            throw new RuntimeException(e);
+        }
+    }
 
 
     @Override
@@ -66,32 +81,35 @@ public class JDBCTakenBookDAO implements TakenBookDAO {
 
     private Map<Long, TakenBook> extractMappedTakenBooks(ResultSet rs) throws SQLException {
         Map<Long, TakenBook> takenBookMap = new HashMap<>();
-        Map<Long, User> userMap = new HashMap<>();
+        //Map<Long, User> userMap = new HashMap<>();
         Map<Long, Book> bookMap = new HashMap<>();
         Map<Long, Author> authorMap = new HashMap<>();
 
         TakenBookMapper takenBookMapper = new TakenBookMapper();
-        UserMapper userMapper = new UserMapper();
+        //UserMapper userMapper = new UserMapper();
         BookMapper bookMapper = new BookMapper();
         AuthorMapper authorMapper = new AuthorMapper();
 
         while (rs.next()) {
             TakenBook takenBook = takenBookMapper.extractFromResultSet(rs);
             Book book = bookMapper.extractFromResultSet(rs);
-            User user = userMapper.extractFromResultSet(rs);
+            //User user = userMapper.extractFromResultSet(rs);
             Author author = authorMapper.extractFromResultSet(rs);
-            Role role = Role.valueOf(rs.getString("user_role.role"));
+            //Role role = Role.valueOf(rs.getString("user_role.role"));
 
-            user = userMapper.makeUnique(userMap, user, rs);
+
+            //user = userMapper.makeUnique(userMap, user, rs);
             book = bookMapper.makeUnique(bookMap, book, rs);
             takenBook = takenBookMapper.makeUnique(takenBookMap, takenBook, rs);
             author = authorMapper.makeUnique(authorMap, author, rs);
 
             book.setAuthor(author);
-            user.getRole().add(role);
-            takenBook.setUser(user);
+            //user.getRole().add(role);
+            //takenBook.setUser(user);
             takenBook.setBook(book);
+
         }
+        System.out.println(takenBookMap.size());
         return takenBookMap;
     }
 }

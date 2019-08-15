@@ -42,6 +42,14 @@ public class TakenBookService {
             takenBookDAO.create(takenBook);
         }
 
+    }
 
+
+    public List<TakenBook> getBooksByUserId(Long userId) {
+        try (TakenBookDAO takenBookDAO = daoFactory.createTakenBookDao()) {
+            return takenBookDAO.getBooksByUserId(userId);
+        } catch (Exception e) {
+            return Collections.emptyList();
+        }
     }
 }

@@ -17,7 +17,6 @@ public class TakenBooksCommand implements Command {
     @Override
     public String execute(HttpServletRequest request) {
         request.setAttribute("takenBooks", takenBookService.getAllTakenBooks());
-
         return "/all_taken_books.jsp";
     }
 }
